@@ -1,0 +1,49 @@
+# Commande
+
+#
+
+## Create docker network
+```
+docker network ls
+```
+```
+docker network create postgres-network
+```
+```
+docker network ls
+```
+
+## Start postgres
+```
+docker run -d \
+--name postgresdb \
+-p 5432:5432 \
+--network postgres-network \
+-e POSTGRES_PASSWORD=password \
+-e POSTGRES_USER=postgres \
+-e POSTGRES_DB=bmconso \
+postgres
+```
+
+## Start pgAdmin
+
+```
+docker run -d \
+-p 5050:80 \
+--name pgadmin4 \
+--network postgres-network \
+-e 'PGADMIN_DEFAULT_EMAIL=grand_dan2@yahoo.fr' \
+-e 'PGADMIN_DEFAULT_PASSWORD=SuperSecret' \
+-e 'PGADMIN_DEFAULT_ENHANCED_COOKIE_PROTECTION=True' \
+-e 'PGADMIN_CONFIG_CONSOLE_LOG_LEVEL=10' \
+dpage/pgadmin4
+```
+## Create django docker image
+
+### Execute Dockerfile to build image
+docker build --tag python-django .
+
+### Run image to create a container
+docker run --publish 8080:8080 --name bmconso --network postgres-network python-django
+or
+docker run -d -p 8080:8080 --name bmconso python-django
