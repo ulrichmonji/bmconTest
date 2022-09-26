@@ -31,8 +31,8 @@ services:
   app:
     build: .
     volumes:
-      - ./data/appli:/django
-    image: app:django
+      - ./data/appli:/code
+    image: app:code
     ports:
       - "8000:8000"
     container_name: bmconso

@@ -3,10 +3,10 @@
 FROM python:3
 
 #directory to store app source code
-#RUN mkdir /django
+#RUN mkdir /code
 
 #directory to store app source code
-WORKDIR /django
+WORKDIR /code
 
 # set environment variables
 # The enviroment variables ensure that the python output is set straight
@@ -17,10 +17,10 @@ ENV PYTHONUNBUFFERED=1
 # install dependencies
 RUN pip install --upgrade pip
 RUN pip install psycopg2-binary
-COPY requirements.txt /django/
+COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 
 # copy project
-COPY . /django
+COPY . /code
 
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
