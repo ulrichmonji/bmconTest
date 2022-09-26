@@ -17,10 +17,10 @@ ENV PYTHONUNBUFFERED=1
 # install dependencies
 RUN pip install --upgrade pip
 RUN pip install psycopg2-binary
-COPY requirements.txt /app/
+COPY requirements.txt /django/
 RUN pip install -r requirements.txt
 
 # copy project
-#COPY . /django
+COPY . /django
 
-#CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -5,7 +5,7 @@ networks:
   #dns_net:
     #  driver: default
       driver: bridge
-    ipam:
+      ipam:
       config:
         - subnet: "192.168.0.0/24"
           gateway: 192.168.0.1
