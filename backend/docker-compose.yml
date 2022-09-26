@@ -2,15 +2,14 @@ version: "3.7"
 
 networks:
   app_net:
-  #dns_net:
-    #  driver: default
-      driver: bridge
+    driver: bridge
       ipam:
       config:
         - subnet: "192.168.0.0/24"
           gateway: 192.168.0.1
 
 services:
+
   db:
     container_name: postgres_db
     image: postgres
@@ -27,7 +26,6 @@ services:
       - "5432:5432"
     networks:
       app_net:
-        #dns_net:
         ipv4_address: 192.168.0.2
 
   app:
@@ -36,7 +34,7 @@ services:
       - ./data/appli:/django
     image: app:django
     ports:
-      - "8080:8080"
+      - "8000:8000"
     container_name: bmconso
     restart: always
     command: python manage.py runserver 0.0.0.0:8000
@@ -54,9 +52,7 @@ services:
   pgadmin:
     container_name: pgadmin4
     image: dpage/pgadmin4
-    healthcheck:
-      disable: true
-      restart: unless-stopped
+    restart: always
     environment:
       - PGADMIN_DEFAULT_EMAIL=grand_dan2@yahoo.fr
       - PGADMIN_DEFAULT_PASSWORD=SuperSecret
