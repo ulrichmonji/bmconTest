@@ -1,15 +1,16 @@
-version: "3"
+version: "3.7"
 
 networks:
   app_net:
-    driver: bridge
-  ipam:
-    config:
-    - subnet: "192.168.0.0/24"
-      gateway: 192.168.0.1
+  #dns_net:
+    #  driver: default
+      driver: bridge
+    ipam:
+      config:
+        - subnet: "192.168.0.0/24"
+          gateway: 192.168.0.1
 
 services:
-
   db:
     container_name: postgres_db
     image: postgres
@@ -26,13 +27,14 @@ services:
       - "5432:5432"
     networks:
       app_net:
+        #dns_net:
         ipv4_address: 192.168.0.2
 
   backend:
-    build: .
-    volumes:
-      - ./data/appli:/code
-    image: app:code
+    build:
+      context: ./backend
+      dockerfile: ../backend.Dockerfile
+    image: backend/database
     ports:
       - "8000:8000"
     container_name: bmconso
@@ -42,31 +44,29 @@ services:
       app_net:
         #dns_net:
         ipv4_address: 192.168.0.3
-
-      
+    
   frontend:
-    build: .
-    image: app:code
+    build: 
+      context: ./frontend
+      dockerfile: frontend.Dockerfile
     ports:
-      - "8000:8000"
-    container_name: bmconso
+      - "8080:8080"
+    links:
+      - postgres:postgres
+      - pgadmin:pgadmin
+    container_name: webapp
     restart: always
-    command: python manage.py runserver 0.0.0.0:8000
     networks:
       app_net:
         #dns_net:
         ipv4_address: 192.168.0.4
-    environment:
-      - POSTGRES_NAME=bmconso
-      - POSTGRES_USER=bmconso
-      - POSTGRES_PASSWORD=password
-    depends_on:
-      - db
       
   pgadmin:
     container_name: pgadmin4
     image: dpage/pgadmin4
-    restart: always
+    healthcheck:
+      disable: true
+      restart: unless-stopped
     environment:
       - PGADMIN_DEFAULT_EMAIL=grand_dan2@yahoo.fr
       - PGADMIN_DEFAULT_PASSWORD=SuperSecret
