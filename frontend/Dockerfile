@@ -1,5 +1,6 @@
 FROM node:lts-alpine
-
+# Mise à jour de l'image
+RUN npm update -g 
 # installe un simple serveur http pour servir un contenu statique
 RUN npm install -g http-server
 
@@ -13,10 +14,10 @@ WORKDIR /app
 COPY package.json ./
 
 # installe les dépendances du projet
-RUN npm install
+RUN npm install --force
 
 # copie les fichiers et dossiers du projet dans le dossier de travail (par exemple : le dossier 'app')
-COPY . .
+COPY . /app
 
 # lint all the code
 # à décommenter une fois que le problème du web pack est réglé
